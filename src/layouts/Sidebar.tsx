@@ -76,7 +76,7 @@ export default function Sidebar({ unreadCount }: SidebarProps) {
         {!collapsed && (
           <div style={{ overflow: 'hidden' }}>
             <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
-              CONVEYOR AI
+              BELTGUARD AI
             </div>
             <div style={{ fontSize: 10, color: 'var(--color-text-muted)', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: 2 }}>
               Predictive Maintenance

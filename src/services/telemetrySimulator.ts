@@ -50,10 +50,10 @@ interface SimulatorState {
 // Scenario-specific offsets/overrides applied on top of the active conveyor baseline
 const SCENARIO_OFFSETS: Record<ScenarioId, Partial<SimulatorState>> = {
   normal:             {},
-  misalignment:       { beltOffset: 13, vibration: 0.17, current: 0.48, rpm: -4 },
-  overload:           { load: 4.2, current: 1.1, rpm: -12, vibration: 0.11, temperature: 5 },
-  speed_variation:    { vibration: 0.08, beltOffset: 8 },
-  high_vibration:     { vibration: 0.24, current: 0.22 },
+  misalignment:       { beltOffset: 22, vibration: 0.28, current: 0.6,  rpm: -8  },
+  overload:           { load: 6.5,     current: 1.8,  rpm: -20, vibration: 0.20, temperature: 12 },
+  speed_variation:    { vibration: 0.18, beltOffset: 14, rpm: -15 },
+  high_vibration:     { vibration: 0.45, current: 0.35, temperature: 8 },
   sensor_disconnect:  { vibration: -99 }, // special code for offline sensor
   communication_loss: { rpm: -999 },       // special code for comms lost
 };

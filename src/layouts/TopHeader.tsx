@@ -12,7 +12,10 @@ import {
   Loader2,
   CheckCircle,
   User,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import type { Theme } from '../hooks/useTheme';
 import type { RiskAnalysis } from '../services/riskEngine';
 import type { Notification } from '../types/events';
 import type {
@@ -50,6 +53,10 @@ interface TopHeaderProps {
   onPowerToggle: (power: SystemPower) => void;
   onConveyorStateChange: (state: ConveyorState) => void;
   onAccelerationChange: (acc: AccelerationRate) => void;
+
+  // Theme
+  theme: Theme;
+  onThemeToggle: () => void;
 }
 
 export default function TopHeader({
@@ -74,6 +81,9 @@ export default function TopHeader({
   onPowerToggle,
   onConveyorStateChange,
   onAccelerationChange,
+
+  theme,
+  onThemeToggle,
 }: TopHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
@@ -427,6 +437,36 @@ export default function TopHeader({
         aria-label="Export telemetry CSV"
       >
         <Download size={12} />
+      </button>
+
+      {/* Dark / Light Mode Toggle */}
+      <button
+        onClick={onThemeToggle}
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 5,
+          padding: '4px 10px',
+          borderRadius: 20,
+          border: '1px solid var(--color-border)',
+          background: theme === 'dark'
+            ? 'rgba(6,182,212,0.1)'
+            : 'rgba(234,179,8,0.12)',
+          color: theme === 'dark' ? 'var(--color-accent)' : '#B45309',
+          cursor: 'pointer',
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: '0.03em',
+          transition: 'all 0.2s ease',
+          flexShrink: 0,
+        }}
+      >
+        {theme === 'dark'
+          ? <><Sun size={13} /> LIGHT</>
+          : <><Moon size={13} /> DARK</>
+        }
       </button>
 
       {/* Notifications */}

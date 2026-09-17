@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { TelemetryState } from '../hooks/useTelemetry';
 import { CONVEYOR_PROFILES, getAlignmentInfo } from '../types/telemetry';
@@ -15,9 +15,10 @@ interface DashboardPageProps {
   telemetry: TelemetryState;
   events: ConveyorEvent[];
   onAcknowledge?: () => void;
+  alertDismissed?: boolean;
 }
 
-export default function DashboardPage({ telemetry, events, onAcknowledge }: DashboardPageProps) {
+export default function DashboardPage({ telemetry, events, onAcknowledge, alertDismissed }: DashboardPageProps) {
   const [showExplain, setShowExplain] = useState(false);
   const navigate = useNavigate();
   const {
@@ -44,7 +45,7 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--color-text-primary)', margin: 0, letterSpacing: '-0.02em' }}>
-              {activeConveyor.name} — Health Overview
+              {activeConveyor.name} â€” Health Overview
             </h2>
             <span className={alignmentInfo.badgeClass} style={{ fontSize: 10 }}>
               {alignmentInfo.label}
@@ -97,7 +98,7 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
           </div>
 
           <span className="badge badge-demo" style={{ fontSize: 10 }}>
-            ⚗ DEMO DATA
+            âš— DEMO DATA
           </span>
 
           {current && systemPower !== 'OFF' && (
@@ -143,13 +144,13 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
           justifyContent: 'space-between',
         }}>
           <div style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>
-            ⚪ System is currently <strong>OFF</strong>. Turn System ON in top header to start monitoring.
+            âšª System is currently <strong>OFF</strong>. Turn System ON in top header to start monitoring.
           </div>
         </div>
       )}
 
       {/* Critical Alert Banner */}
-      {systemPower !== 'OFF' && (riskAnalysis?.level === 'warning' || riskAnalysis?.level === 'critical') && (
+      {systemPower !== 'OFF' && !alertDismissed && (riskAnalysis?.level === 'warning' || riskAnalysis?.level === 'critical') && (
         <CriticalAlertBanner riskAnalysis={riskAnalysis} onAcknowledge={onAcknowledge} />
       )}
 
@@ -157,7 +158,7 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 16, alignItems: 'start' }}>
         {/* Left: Sensor Cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <div className="section-title">LIVE SENSOR READINGS — {activeConveyor.name}</div>
+          <div className="section-title">LIVE SENSOR READINGS â€” {activeConveyor.name}</div>
           <SensorSummaryCards snapshot={current} history={history} isVibOffline={isVibOffline} />
 
           {/* Mini Camera Widget */}
@@ -165,14 +166,14 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Camera size={14} style={{ color: 'var(--color-accent)' }} />
-                <span className="section-title">CAMERA VISION — {activeConveyor.name}</span>
+                <span className="section-title">CAMERA VISION â€” {activeConveyor.name}</span>
               </div>
               <button
                 className="btn btn-ghost btn-sm"
                 onClick={() => navigate('/camera')}
                 aria-label="Open full camera view"
               >
-                Full View →
+                Full View â†’
               </button>
             </div>
             <VisionCanvasFeed
@@ -199,7 +200,7 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
                 { label: 'Active Alerts', value: activeEvents.toString(), icon: <AlertTriangle size={12} />, color: activeEvents > 0 ? 'var(--color-status-warning)' : 'var(--color-text-muted)' },
                 { label: 'Sensor Health', value: systemPower === 'OFF' ? '0/9' : isVibOffline ? '8/9' : isCommsLost ? '0/9' : '9/9', icon: <Activity size={12} />, color: isVibOffline || isCommsLost || systemPower === 'OFF' ? 'var(--color-status-warning)' : 'var(--color-status-normal)' },
                 { label: 'AI Status', value: systemPower === 'ONLINE' ? 'Active' : 'Standby', icon: <Database size={12} />, color: systemPower === 'ONLINE' ? 'var(--color-status-normal)' : 'var(--color-text-muted)' },
-                { label: 'Uptime', value: systemPower === 'ONLINE' ? '99.8%' : '—', icon: <CheckCircle size={12} />, color: 'var(--color-text-secondary)' },
+                { label: 'Uptime', value: systemPower === 'ONLINE' ? '99.8%' : 'â€”', icon: <CheckCircle size={12} />, color: 'var(--color-text-secondary)' },
               ].map(item => (
                 <div key={item.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--color-text-muted)' }}>
@@ -219,7 +220,7 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <div className="section-title">RECENT EVENTS</div>
               <button className="btn btn-ghost btn-sm" onClick={() => navigate('/events')}>
-                All →
+                All â†’
               </button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -252,7 +253,7 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
                       {evt.title}
                     </div>
                     <div style={{ fontSize: 10, color: 'var(--color-text-dim)', marginTop: 2 }}>
-                      {evt.timestamp.toLocaleTimeString()} · {evt.status}
+                      {evt.timestamp.toLocaleTimeString()} Â· {evt.status}
                     </div>
                   </div>
                 </div>
@@ -271,3 +272,5 @@ export default function DashboardPage({ telemetry, events, onAcknowledge }: Dash
     </div>
   );
 }
+
+

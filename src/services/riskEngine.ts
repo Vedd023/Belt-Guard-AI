@@ -43,7 +43,8 @@ function deviationScore(value: number, min: number, max: number, weight: number)
   const range = max - min;
   const center = (min + max) / 2;
   const distance = Math.max(0, Math.abs(value - center) - range / 2);
-  const normalizedDev = distance / (range * 0.5); // 1.0 = 50% outside range
+  // Divide by range*0.25 (was range*0.5) — 2× more sensitive to out-of-range deviations
+  const normalizedDev = distance / (range * 0.25);
   return clamp(normalizedDev * weight, 0, weight);
 }
 
@@ -86,8 +87,9 @@ export function computeRiskAnalysis(
 
   let level: RiskLevel = 'normal';
   let label = 'NORMAL';
-  if (healthScore < 40) { level = 'critical'; label = 'CRITICAL'; }
-  else if (healthScore < 70) { level = 'warning'; label = 'WARNING'; }
+  // Thresholds: critical < 60, warning < 80 — covers realistic demo scenario ranges
+  if (healthScore < 60) { level = 'critical'; label = 'CRITICAL'; }
+  else if (healthScore < 80) { level = 'warning'; label = 'WARNING'; }
 
   // Rank contributors
   const rawContributors: { key: string; label: string; raw: number; weight: number; deviation: string; isAbnormal: boolean }[] = [
